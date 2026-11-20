@@ -22,11 +22,35 @@ const workouts={
  PULL:{sub:'Back · Biceps',items:['Cross Lat Pulldown','Hammer Row','Seated Row','Hyper Extension','Lateral Raises','Delt Fly','Cable Curls','Hammer Curls'],imgs:[7,8,9,10,11,12,13,14]},
  LEGS:{sub:'Legs · Glutes · Calves',items:['Leg Extension','Hack Squat','Leg Press Machine','Leg Curl','Adductor Machine','Calves Raise'],imgs:[15,16,17,18,19,20]}
 };
-let day='PUSH',records=JSON.parse(localStorage.getItem('ironTrackRecords')||'[]'),draft={};
+let day=localStorage.getItem('ironTrackSelectedDay')||'PUSH';
+let records=JSON.parse(localStorage.getItem('ironTrackRecords')||'[]'),draft={};
 const $=id=>document.getElementById(id);const key=()=>new Date().toISOString().slice(0,10);
-function saveDraft(){localStorage.setItem('ironTrackDraft',JSON.stringify({day,draft,cardio:$('cardio').value}));}
-function loadDraft(){try{const d=JSON.parse(localStorage.getItem('ironTrackDraft')||'{}');if(d.day===day){draft=d.draft||{};$('cardio').value=d.cardio||''}else{draft={};$('cardio').value=''}}catch{draft={}}}
-function renderTabs(){$('tabs').innerHTML=Object.entries(workouts).map(([d,w])=>`<button class="tab ${d===day?'active':''}" data-day="${d}">${d==='PUSH'?'♧':d==='PULL'?'▣':'♧'}<br>${d}<small>${w.items.length} exercises</small></button>`).join('');document.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>{saveDraft();day=b.dataset.day;loadDraft();render()})}
+
+// احفظ مسودة مستقلة لكل نوع تمرين، حتى لا تختلط بيانات PUSH وPULL وLEGS.
+function saveDraft(){
+  localStorage.setItem('ironTrackDraft_'+day,JSON.stringify({draft,cardio:$('cardio').value}));
+  localStorage.setItem('ironTrackSelectedDay',day);
+}
+function loadDraft(){
+  try{
+    let saved=localStorage.getItem('ironTrackDraft_'+day);
+    // ترحيل المسودة القديمة تلقائياً إن كانت موجودة.
+    if(!saved){
+      const old=JSON.parse(localStorage.getItem('ironTrackDraft')||'null');
+      if(old && old.day===day){
+        saved=JSON.stringify({draft:old.draft||{},cardio:old.cardio||''});
+        localStorage.setItem('ironTrackDraft_'+day,saved);
+      }
+    }
+    const data=JSON.parse(saved||'{}');
+    draft=data.draft||{};
+    $('cardio').value=data.cardio??'';
+  }catch{
+    draft={};
+    $('cardio').value='';
+  }
+}
+function renderTabs(){$('tabs').innerHTML=Object.entries(workouts).map(([d,w])=>`<button class="tab ${d===day?'active':''}" data-day="${d}">${d==='PUSH'?'♧':d==='PULL'?'▣':'♧'}<br>${d}<small>${w.items.length} exercises</small></button>`).join('');document.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>{saveDraft();day=b.dataset.day;localStorage.setItem('ironTrackSelectedDay',day);loadDraft();render()})}
 function render(){renderTabs();let w=workouts[day];$('dayTitle').textContent=day+' DAY';$('daySub').textContent=w.sub;$('exerciseList').innerHTML=w.items.map((name,i)=>{let v=draft[i]||{};return `<article class="exercise"><div class="exhead"><input class="check" type="checkbox" data-done="${i}" ${v.done?'checked':''} aria-label="Mark ${name} complete"><div class="exname">${name}</div><div class="num">${i+1}</div></div><img class="eximg" src="ex${String(w.imgs[i]).padStart(2,'0')}.jpg" alt="${name} exercise demonstration" loading="lazy"><div class="weights"><div class="field"><label>STARTED WEIGHT (KG)</label><input type="number" min="0" step="0.5" inputmode="decimal" placeholder="0" data-start="${i}" value="${v.start??''}"></div><div class="field"><label>FINISHED WEIGHT (KG)</label><input type="number" min="0" step="0.5" inputmode="decimal" placeholder="0" data-end="${i}" value="${v.end??''}"></div></div></article>`}).join('');document.querySelectorAll('[data-done]').forEach(e=>e.onchange=()=>{draft[e.dataset.done]={...(draft[e.dataset.done]||{}),done:e.checked};updateProgress();saveDraft()});document.querySelectorAll('[data-start]').forEach(e=>e.oninput=()=>{draft[e.dataset.start]={...(draft[e.dataset.start]||{}),start:e.value};saveDraft()});document.querySelectorAll('[data-end]').forEach(e=>e.oninput=()=>{draft[e.dataset.end]={...(draft[e.dataset.end]||{}),end:e.value};saveDraft()});$('cardio').oninput=saveDraft;updateProgress()}
 function updateProgress(){let n=workouts[day].items.filter((_,i)=>draft[i]?.done).length;$('count').textContent=`${n}/${workouts[day].items.length}`;$('progress').style.width=(100*n/workouts[day].items.length)+'%'}
 function saveWorkout(){const date=key();const entry={id:date+'-'+day+'-'+Date.now(),date,day,cardio:Number($('cardio').value||0),items:workouts[day].items.map((name,i)=>({name,start:draft[i]?.start||'',end:draft[i]?.end||'',done:!!draft[i]?.done}))};records.unshift(entry);localStorage.setItem('ironTrackRecords',JSON.stringify(records));$('saveMessage').textContent='Workout saved successfully ✓';renderHistoryCount()}
@@ -36,5 +60,5 @@ function showWorkout(){ $('historyView').classList.add('hidden');$('workoutView'
 function renderHistory(){ $('historyList').innerHTML=records.length?records.map(r=>`<div class="historyitem"><button data-open="${r.id}">View</button><strong>${r.day} DAY · ${r.date}</strong><small>${r.items.filter(x=>x.done).length}/${r.items.length} completed · Cardio ${r.cardio} min</small></div>`).join(''):'<div class="empty">No saved workouts yet.</div>';document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>viewRecord(b.dataset.open))}
 function viewRecord(id){let r=records.find(x=>x.id===id);if(!r)return;let lines=r.items.map(x=>`${x.name}: start ${x.start||'—'} kg / finish ${x.end||'—'} kg ${x.done?'✓':''}`).join('\n');alert(`${r.day} · ${r.date}\nCardio: ${r.cardio} min\n\n${lines}`)}
 $('historyBtn').onclick=showHistory;$('workoutBtn').onclick=showWorkout;$('saveBtn').onclick=saveWorkout;$('exportBtn').onclick=()=>{let blob=new Blob([JSON.stringify(records,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='iron-track-backup.json';a.click();URL.revokeObjectURL(a.href)};$('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{try{let imported=JSON.parse(await e.target.files[0].text());if(Array.isArray(imported)){records=[...imported,...records];localStorage.setItem('ironTrackRecords',JSON.stringify(records));renderHistoryCount();renderHistory();alert('Backup imported')}}catch{alert('Invalid backup file')}};
-renderHistoryCount();loadDraft();render();if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
+localStorage.setItem('ironTrackSelectedDay',day);renderHistoryCount();loadDraft();render();if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
 </script></body></html>
