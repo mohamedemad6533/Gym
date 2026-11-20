@@ -28,7 +28,24 @@ const $=id=>document.getElementById(id);const key=()=>new Date().toISOString().s
 
 // احفظ مسودة مستقلة لكل نوع تمرين، حتى لا تختلط بيانات PUSH وPULL وLEGS.
 function saveDraft(){
-  localStorage.setItem('ironTrackDraft_'+day,JSON.stringify({draft,cardio:$('cardio').value}));
+  // اقرأ القيم مباشرة من الخانات قبل الانتقال لقائمة أخرى.
+  document.querySelectorAll('[data-start]').forEach(input=>{
+    const i=input.dataset.start;
+    draft[i]={...(draft[i]||{}),start:input.value};
+  });
+  document.querySelectorAll('[data-end]').forEach(input=>{
+    const i=input.dataset.end;
+    draft[i]={...(draft[i]||{}),end:input.value};
+  });
+  document.querySelectorAll('[data-done]').forEach(input=>{
+    const i=input.dataset.done;
+    draft[i]={...(draft[i]||{}),done:input.checked};
+  });
+
+  localStorage.setItem('ironTrackDraft_'+day,JSON.stringify({
+    draft:draft,
+    cardio:$('cardio').value
+  }));
   localStorage.setItem('ironTrackSelectedDay',day);
 }
 function loadDraft(){
@@ -60,5 +77,9 @@ function showWorkout(){ $('historyView').classList.add('hidden');$('workoutView'
 function renderHistory(){ $('historyList').innerHTML=records.length?records.map(r=>`<div class="historyitem"><button data-open="${r.id}">View</button><strong>${r.day} DAY · ${r.date}</strong><small>${r.items.filter(x=>x.done).length}/${r.items.length} completed · Cardio ${r.cardio} min</small></div>`).join(''):'<div class="empty">No saved workouts yet.</div>';document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>viewRecord(b.dataset.open))}
 function viewRecord(id){let r=records.find(x=>x.id===id);if(!r)return;let lines=r.items.map(x=>`${x.name}: start ${x.start||'—'} kg / finish ${x.end||'—'} kg ${x.done?'✓':''}`).join('\n');alert(`${r.day} · ${r.date}\nCardio: ${r.cardio} min\n\n${lines}`)}
 $('historyBtn').onclick=showHistory;$('workoutBtn').onclick=showWorkout;$('saveBtn').onclick=saveWorkout;$('exportBtn').onclick=()=>{let blob=new Blob([JSON.stringify(records,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='iron-track-backup.json';a.click();URL.revokeObjectURL(a.href)};$('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{try{let imported=JSON.parse(await e.target.files[0].text());if(Array.isArray(imported)){records=[...imported,...records];localStorage.setItem('ironTrackRecords',JSON.stringify(records));renderHistoryCount();renderHistory();alert('Backup imported')}}catch{alert('Invalid backup file')}};
-localStorage.setItem('ironTrackSelectedDay',day);renderHistoryCount();loadDraft();render();if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
+localStorage.setItem('ironTrackSelectedDay',day);
+renderHistoryCount();loadDraft();render();
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveDraft()});
+window.addEventListener('pagehide',saveDraft);
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
 </script></body></html>
