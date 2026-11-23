@@ -1,16 +1,16 @@
-const CACHE = 'iron-track-v3';
+const CACHE = 'iron-track-v5';
 
-const FILES = [
-  './',
-  './index.html',
-  './manifest.webmanifest',
-  './icon.svg'
-];
+const INDEX_URL = new URL(
+  'index.html',
+  self.registration.scope
+).href;
 
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE)
-      .then(cache => cache.addAll(FILES))
+      .then(cache =>
+        cache.add(new Request(INDEX_URL, { cache: 'reload' }))
+      )
       .then(() => self.skipWaiting())
   );
 });
@@ -20,7 +20,10 @@ self.addEventListener('activate', event => {
     caches.keys().then(keys =>
       Promise.all(
         keys
-          .filter(key => key.startsWith('iron-track-') && key !== CACHE)
+          .filter(key =>
+            key.startsWith('iron-track-') &&
+            key !== CACHE
+          )
           .map(key => caches.delete(key))
       )
     ).then(() => self.clients.claim())
@@ -28,29 +31,32 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+
   if (event.request.method !== 'GET') return;
 
-  event.respondWith(
-    caches.match(event.request).then(cached => {
+  if (event.request.mode === 'navigate') {
 
-      if (cached) return cached;
+    event.respondWith(
+      fetch(event.request, { cache: 'no-store' })
+        .then(response => {
 
-      return fetch(event.request).then(response => {
+          if (response.ok) {
+            const copy = response.clone();
 
-        if (
-          response &&
-          response.ok &&
-          new URL(event.request.url).origin === self.location.origin
-        ) {
-          const copy = response.clone();
+            caches.open(CACHE).then(cache => {
+              cache.put(INDEX_URL, copy);
+            });
+          }
 
-          caches.open(CACHE).then(cache => {
-            cache.put(event.request, copy);
-          });
-        }
+          return response;
+        })
+        .catch(async () => {
+          const cached = await caches.match(INDEX_URL);
 
-        return response;
-      });
-    })
-  );
+          return cached || Response.error();
+        })
+    );
+
+  }
+
 });
