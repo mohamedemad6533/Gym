@@ -2,13 +2,82 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#081522"><meta name="description" content="IRON TRACK workout and weight progress tracker">
+<meta name="theme-color" content="#000000"><meta name="description" content="IRON TRACK workout and weight progress tracker">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml">
 <title>IRON TRACK</title>
 <style>
-:root{--bg:#091725;--panel:#14283c;--panel2:#1b344c;--blue:#0787d8;--blue2:#38b6ff;--muted:#9fb2c5;--line:#344b60;--green:#16c784}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f5f8fc;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:28px}.hero{padding:28px 18px 24px;text-align:center;background:linear-gradient(135deg,#07111d,#12314e 65%,#0878bd);border-bottom:1px solid #24445f}.brand{font-size:clamp(30px,8vw,43px);font-weight:950;letter-spacing:1px}.brand span{color:var(--blue2)}.tag{color:#b7c8d8;font-size:13px}.slogan{font-weight:750;font-size:18px;margin:24px 0 0}.wrap{max-width:760px;margin:auto;padding:16px}.top-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 26px}.action{border:0;border-radius:18px;padding:15px;background:#20364b;color:white;font-size:17px;font-weight:800}.action.primary{background:var(--blue)}h2{font-size:20px;margin:18px 0 14px}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.tab{background:#20364b;border:1px solid #435a70;border-radius:17px;color:#fff;padding:14px 5px;font-weight:800;font-size:17px}.tab small{display:block;color:#c0ceda;font-weight:500;font-size:12px;margin-top:5px}.tab.active{background:#087fc8;border-color:#56baff;box-shadow:0 0 0 1px #56baff}.dayhead{display:flex;justify-content:space-between;align-items:end;margin:24px 0 8px}.dayhead h1{font-size:27px;margin:0}.sub{color:var(--muted);font-size:14px}.progressline{height:9px;background:#2b4358;border-radius:10px;overflow:hidden;margin:12px 0 18px}.progressline i{display:block;height:100%;background:linear-gradient(90deg,#087fc8,#4bc4ff);width:0}.exercise{background:var(--panel);border:1px solid #3a536a;border-radius:22px;padding:13px;margin:13px 0;box-shadow:0 8px 20px #0002}.exhead{display:flex;align-items:center;gap:10px;margin-bottom:11px}.check{width:27px;height:27px;accent-color:#0a9be9;flex:none}.exname{font-size:18px;font-weight:850;flex:1}.num{background:#0787d8;border-radius:10px;padding:8px 12px;font-weight:900}.eximg{width:100%;height:190px;object-fit:cover;border-radius:15px;display:block;background:#263d51}.weights{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:12px}.weights .field label{display:block;color:#b5c7d8;font-size:10px;font-weight:800;letter-spacing:.3px;margin-bottom:6px;min-height:12px;text-align:center}.weights .field input{width:100%;background:#0c1c2a;border:1px solid #52687b;color:white;border-radius:13px;padding:11px 3px;font-size:15px;text-align:center;outline:none;min-width:0}.weights .field input:focus{border-color:var(--blue2)}.field input:focus{border-color:var(--blue2)}.cardio,.savebox,.historybox{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;margin:18px 0}.cardio input{max-width:120px}.save{width:100%;border:0;background:var(--blue);color:white;padding:16px;border-radius:16px;font-size:17px;font-weight:850}.saved{color:#5be2a5;text-align:center;min-height:22px;margin-top:9px;font-size:13px}.historyitem{border:1px solid #344c62;border-radius:13px;padding:12px;margin:9px 0;background:#102337}.historyitem strong{display:block}.historyitem small{color:var(--muted)}.historyitem button{float:right;background:#203c56;color:#fff;border:1px solid #49647d;border-radius:9px;padding:7px}.empty{color:var(--muted);text-align:center;padding:22px}.hidden{display:none}.foot{text-align:center;color:#8299ad;font-size:12px;padding:16px}.backup{display:flex;gap:10px;flex-wrap:wrap}.backup button{flex:1;background:#20364b;color:#fff;border:1px solid #49647d;border-radius:12px;padding:12px;font-weight:700}@media(min-width:600px){.eximg{height:250px}.wrap{padding:22px}}
+:root{--bg:#000;--panel:#0e0d0a;--panel2:#171409;--gold:#d4a017;--gold2:#f2c230;--goldd:#8a6a0b;--muted:#a59b80;--line:#2f2813;--ease:cubic-bezier(.2,.8,.2,1)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:#f7f2e4;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:28px;background-image:radial-gradient(900px 420px at 50% -120px,#2a2006 0,transparent 70%)}
+.hero{position:relative;overflow:hidden;padding:30px 18px 26px;text-align:center;background:linear-gradient(160deg,#000,#12100a 60%,#241b05);border-bottom:1px solid var(--goldd)}
+.hero::before{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,#f2c23033,transparent);transform:skewX(-20deg);animation:sweep 1.6s .5s var(--ease) 1 both}
+.hero::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;background:linear-gradient(90deg,transparent,var(--gold2),transparent);transform:scaleX(0);animation:line 1.2s .3s var(--ease) forwards}
+.brand{font-size:clamp(30px,8vw,43px);font-weight:950;letter-spacing:1px;animation:rise .9s var(--ease) both}
+.brand span{color:var(--gold2);text-shadow:0 0 22px #f2c23055;animation:glow 3.5s 1.2s ease-in-out infinite}
+.tag{color:#c9bd98;font-size:13px;animation:rise .9s .12s var(--ease) both}
+.slogan{font-weight:750;font-size:18px;margin:24px 0 0;animation:rise .9s .24s var(--ease) both}
+.wrap{max-width:760px;margin:auto;padding:16px}
+.top-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 26px}
+.action{border:1px solid var(--line);border-radius:18px;padding:15px;background:var(--panel2);color:#fff;font-size:17px;font-weight:800;transition:transform .2s var(--ease),box-shadow .2s,border-color .2s}
+.action.primary{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#000;border-color:var(--gold2)}
+.action:hover{border-color:var(--gold)}.action:active,.tab:active,.save:active{transform:scale(.96)}
+.action.primary:hover{box-shadow:0 6px 24px #f2c23044}
+h2{font-size:20px;margin:18px 0 14px;color:var(--gold2)}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tab{background:var(--panel);border:1px solid var(--line);border-radius:17px;color:#fff;padding:14px 5px;font-weight:800;font-size:17px;transition:transform .2s var(--ease),background .25s,border-color .25s,box-shadow .25s}
+.tab small{display:block;color:#b8ad8d;font-weight:500;font-size:12px;margin-top:5px}
+.tab.active{background:linear-gradient(160deg,#2b2108,#4a3708);border-color:var(--gold2);box-shadow:0 0 0 1px var(--gold2),0 6px 22px #f2c23026;color:var(--gold2)}
+.dayhead{display:flex;justify-content:space-between;align-items:end;margin:24px 0 8px}
+.dayhead h1{font-size:27px;margin:0;animation:swap .45s var(--ease) both}
+.sub{color:var(--muted);font-size:14px}
+#count{color:var(--gold2);font-size:20px}
+.progressline{height:9px;background:#1d180a;border-radius:10px;overflow:hidden;margin:12px 0 18px;border:1px solid var(--line)}
+.progressline i{display:block;height:100%;background:linear-gradient(90deg,var(--goldd),var(--gold2));width:0;transition:width .6s var(--ease);box-shadow:0 0 12px #f2c23088}
+.exercise{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:13px;margin:13px 0;box-shadow:0 10px 26px #000a;transition:border-color .3s,box-shadow .3s;animation:rise .55s var(--ease) both}
+.exercise:nth-child(2){animation-delay:.06s}.exercise:nth-child(3){animation-delay:.12s}.exercise:nth-child(4){animation-delay:.18s}.exercise:nth-child(5){animation-delay:.24s}.exercise:nth-child(n+6){animation-delay:.3s}
+.exercise:focus-within{border-color:var(--goldd);box-shadow:0 10px 30px #f2c23018}
+.exhead{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.check{width:27px;height:27px;accent-color:var(--gold2);flex:none;transition:transform .2s var(--ease)}
+.check:checked{animation:pop .35s var(--ease)}
+.exname{font-size:18px;font-weight:850;flex:1}
+.num{background:var(--gold2);color:#000;border-radius:10px;padding:8px 12px;font-weight:900}
+.eximg{width:100%;height:190px;object-fit:cover;border-radius:15px;display:block;background:#17130a;filter:saturate(.9) contrast(1.05);transition:filter .4s}
+.exercise:hover .eximg{filter:saturate(1.05) contrast(1.1)}
+.weights{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:12px}
+.weights .field label{display:block;color:#c4b98f;font-size:10px;font-weight:800;letter-spacing:.3px;margin-bottom:6px;min-height:12px;text-align:center}
+.weights .field input{width:100%;background:#050505;border:1px solid #3d3417;color:#fff;border-radius:13px;padding:11px 3px;font-size:15px;text-align:center;outline:none;min-width:0;transition:border-color .2s,box-shadow .2s}
+.weights .field input:focus,.field input:focus{border-color:var(--gold2);box-shadow:0 0 0 3px #f2c23022}
+.cardio,.savebox,.historybox{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;margin:18px 0}
+.cardio input{max-width:120px;background:#050505;border:1px solid #3d3417;color:#fff;border-radius:13px;padding:11px;outline:none}
+.save{width:100%;border:0;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#000;padding:16px;border-radius:16px;font-size:17px;font-weight:850;transition:transform .2s var(--ease),box-shadow .25s}
+.save:hover{box-shadow:0 8px 26px #f2c23044}
+.saved{color:var(--gold2);text-align:center;min-height:22px;margin-top:9px;font-size:13px}
+.saved.show{animation:pop .5s var(--ease)}
+.historyitem{border:1px solid var(--line);border-radius:13px;padding:12px;margin:9px 0;background:#0a0905;animation:rise .45s var(--ease) both}
+.historyitem strong{display:block}.historyitem small{color:var(--muted)}
+.historyitem button{float:right;background:var(--panel2);color:var(--gold2);border:1px solid var(--goldd);border-radius:9px;padding:7px}
+.empty{color:var(--muted);text-align:center;padding:22px}
+.hidden{display:none}
+#workoutView:not(.hidden),#historyView:not(.hidden){animation:fade .4s var(--ease) both}
+.foot{text-align:center;color:#857b5e;font-size:12px;padding:16px}
+.backup{display:flex;gap:10px;flex-wrap:wrap}
+.backup button{flex:1;background:var(--panel2);color:#fff;border:1px solid var(--goldd);border-radius:12px;padding:12px;font-weight:700;transition:background .2s,transform .2s var(--ease)}
+.backup button:hover{background:#2b2108}.backup button:active{transform:scale(.96)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes swap{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+@keyframes sweep{to{left:130%}}
+@keyframes line{to{transform:scaleX(1)}}
+@keyframes glow{0%,100%{text-shadow:0 0 14px #f2c23033}50%{text-shadow:0 0 30px #f2c23080}}
+
+#bgfx{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+@media(min-width:600px){.eximg{height:250px}.wrap{padding:22px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.hero::after{transform:none}}
 </style></head>
 <body>
+<canvas id="bgfx" aria-hidden="true"></canvas>
 <header class="hero"><div class="brand">IRON <span>TRACK</span></div><div class="tag">YOUR PERSONAL WORKOUT TRACKER</div><div class="slogan">Track your weights. Build your strength.</div></header>
 <main class="wrap">
 <div class="top-actions"><button class="action" id="historyBtn">History (<span id="historyCount">0</span>) ◷</button><button class="action primary" id="workoutBtn">Workout ⚒</button></div>
@@ -106,7 +175,7 @@ function render(){
   updateProgress();
 }
 function updateProgress(){let n=workouts[day].items.filter((_,i)=>draft[i]?.done).length;$('count').textContent=`${n}/${workouts[day].items.length}`;$('progress').style.width=(100*n/workouts[day].items.length)+'%'}
-function saveWorkout(){saveDraft();const date=key();const entry={id:date+'-'+day+'-'+Date.now(),date,day,cardio:Number($('cardio').value||0),items:workouts[day].items.map((name,i)=>{const weights=draft[i]?.weights||[draft[i]?.start||'','','',draft[i]?.end||''];return {name,weights,start:weights[0]||'',end:weights[3]||'',done:!!draft[i]?.done}})};records.unshift(entry);localStorage.setItem('ironTrackRecords',JSON.stringify(records));$('saveMessage').textContent='Workout saved successfully ✓';renderHistoryCount()}
+function saveWorkout(){saveDraft();const date=key();const entry={id:date+'-'+day+'-'+Date.now(),date,day,cardio:Number($('cardio').value||0),items:workouts[day].items.map((name,i)=>{const weights=draft[i]?.weights||[draft[i]?.start||'','','',draft[i]?.end||''];return {name,weights,start:weights[0]||'',end:weights[3]||'',done:!!draft[i]?.done}})};records.unshift(entry);localStorage.setItem('ironTrackRecords',JSON.stringify(records));const m=$('saveMessage');m.textContent='Workout saved successfully ✓';m.classList.remove('show');void m.offsetWidth;m.classList.add('show');renderHistoryCount()}
 function renderHistoryCount(){$('historyCount').textContent=records.length}
 function showHistory(){ $('workoutView').classList.add('hidden');$('historyView').classList.remove('hidden');renderHistory()}
 function showWorkout(){ $('historyView').classList.add('hidden');$('workoutView').classList.remove('hidden')}
@@ -118,4 +187,71 @@ renderHistoryCount();loadDraft();render();
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveDraft()});
 window.addEventListener('pagehide',saveDraft);
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
+
+// Animated gym background: drifting line-art dumbbells, plates, kettlebells + gold dust
+(function(){
+  const cv=document.getElementById('bgfx'),ctx=cv.getContext('2d');
+  const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W,H,dpr,items=[],dust=[],raf=0,last=0;
+  const GOLD='242,194,48';
+  function size(){
+    dpr=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;
+    cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+    const n=Math.max(7,Math.min(14,Math.round(W*H/90000)));
+    items=Array.from({length:n},(_,i)=>mk(i,true));
+    dust=Array.from({length:Math.round(n*4)},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.4,v:Math.random()*14+6,a:Math.random()*.4+.15}));
+  }
+  function mk(i,init){
+    const type=['dumbbell','plate','kettle'][i%3],s=Math.random()*.7+.7;
+    return{type,s,x:Math.random()*W,y:init?Math.random()*H:H+120,
+      vy:-(Math.random()*9+7),vx:(Math.random()-.5)*5,
+      rot:Math.random()*Math.PI*2,vr:(Math.random()-.5)*.35,
+      a:Math.random()*.07+.07,ph:Math.random()*6.28};
+  }
+  function dumbbell(){
+    ctx.strokeRect(-26,-3.5,52,7);
+    [[-30,26,3],[-36,34,3],[30,26,3],[33,34,3]].forEach(([x,h,w])=>{ctx.strokeRect(x-w/2,-h/2,w+3,h)});
+    ctx.strokeRect(-46,-7,5,14);ctx.strokeRect(41,-7,5,14);
+  }
+  function plate(){
+    ctx.beginPath();ctx.arc(0,0,42,0,6.283);ctx.stroke();
+    ctx.beginPath();ctx.arc(0,0,33,0,6.283);ctx.stroke();
+    ctx.beginPath();ctx.arc(0,0,9,0,6.283);ctx.stroke();
+    ctx.beginPath();for(let k=0;k<4;k++){const a=k*1.5708+.785;ctx.moveTo(Math.cos(a)*14,Math.sin(a)*14);ctx.lineTo(Math.cos(a)*28,Math.sin(a)*28)}ctx.stroke();
+  }
+  function kettle(){
+    ctx.beginPath();ctx.arc(0,8,24,0,6.283);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(-14,-12);ctx.bezierCurveTo(-18,-44,18,-44,14,-12);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(-9,-14);ctx.bezierCurveTo(-11,-34,11,-34,9,-14);ctx.stroke();
+    ctx.strokeRect(-12,30,24,3);
+  }
+  function draw(t){
+    ctx.clearRect(0,0,W,H);
+    // soft gold pulse behind the page, like a heartbeat
+    const pulse=.5+.5*Math.sin(t/1100);
+    const g=ctx.createRadialGradient(W/2,H*.75,0,W/2,H*.75,Math.max(W,H)*.7);
+    g.addColorStop(0,`rgba(${GOLD},${.035+pulse*.03})`);g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    dust.forEach(d=>{ctx.fillStyle=`rgba(${GOLD},${d.a})`;ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,6.283);ctx.fill()});
+    ctx.lineWidth=1.6;
+    items.forEach(o=>{
+      ctx.save();ctx.translate(o.x+Math.sin(t/2600+o.ph)*14,o.y);ctx.rotate(o.rot);ctx.scale(o.s*1.5,o.s*1.5);
+      ctx.strokeStyle=`rgba(${GOLD},${o.a})`;ctx.lineWidth=1.4/o.s;
+      ({dumbbell,plate,kettle})[o.type]();ctx.restore();
+    });
+  }
+  function tick(t){
+    const dt=Math.min((t-last)/1000||0,.05);last=t;
+    items.forEach((o,i)=>{o.y+=o.vy*dt;o.x+=o.vx*dt;o.rot+=o.vr*dt;if(o.y<-120)items[i]=mk(i,false)});
+    dust.forEach(d=>{d.y-=d.v*dt;if(d.y<-4){d.y=H+4;d.x=Math.random()*W}});
+    draw(t);raf=requestAnimationFrame(tick);
+  }
+  size();
+  addEventListener('resize',()=>{size();if(still)draw(0)});
+  if(still){draw(0)}else{raf=requestAnimationFrame(tick)}
+  document.addEventListener('visibilitychange',()=>{
+    if(still)return;
+    if(document.hidden)cancelAnimationFrame(raf);else{last=performance.now();raf=requestAnimationFrame(tick)}
+  });
+})();
 </script></body></html>
